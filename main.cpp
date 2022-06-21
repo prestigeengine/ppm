@@ -1,56 +1,60 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
-#include <cstring>
+#include <array>
 #include <fstream>
+using std::string;
 
-const std::string ver = "v0.01";
+/*
+	(Huge Gay) Design Intrinsics I Thought Of While Reconsidering My Decisions In Hobbies And All That Bullshit
 
-void pkginstall(const char* pkg)
+	- Have you ever considered OOP? <- gay
+	- "doesnt it just fetch a package from a webserver" - warsaw
+	- (They're right, you know)
+*/
+
+const string ver = "v0.01"; // const because it will never get past this version
+
+void pkginstall(string pkg)
 {
 	// TODO: fetch from website
 	std::fstream package(pkg, std::ios::out);
 	if (!package)
 	{
 		std::cerr << "Failed to open package!\n";
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	// TODO: deal with package properly
+	// Do code generation, deal with package manifest
+	// then integrate into project (somehow)
 	package.close();
 }
 
-int printInstallHelp(void)
-{
-	std::cerr
-		<< "PPM v0.01\n"
-		<< "No package specified!"
-		<< "Usage: ppm install <package>";
-	return EXIT_FAILURE;
-}
-
-void do_stuff(std::string do_this, const char* with)
+void do_stuff(string do_this, string with)
 {
 	if (do_this.compare("install")) pkginstall(with);
 }
 
-void cease() {}
+void cease(void) {}
 
 int main(int count, const char* value[])
 {
-	if (count < 1) // no action specified
+	if (count < 2) // no action specified
 	{
-		std::cerr << "PPM " << ver << "\nNo action specified!\n";
-		exit(1);
+		std::cout << "PPM " << ver << "\nNo action specified!\n";
+		exit(EXIT_FAILURE);
 	}
 
-	if (strcmp(value[1], "version") == 0)
+	string arg = value[1];
+
+	if (arg.compare("version") == 0)
 	{
 		std::cout << "PPM " << ver;
-		exit(0);
+		exit(EXIT_SUCCESS);
 	}
 	if (count < 3) // no thing to mess with!
 	{
-		if (strcmp(value[1], "install") == 0)
+		if (arg.compare("install") == 0)
 		{
 			std::cerr
 				<< "PPM " << ver
@@ -58,9 +62,10 @@ int main(int count, const char* value[])
 				<< "\nUsage: ppm install <package>"
 				<< std::endl;
 		}
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
-	do_stuff(value[1], value[2]);
+	string target = value[2];
+	do_stuff(arg, target);
 
 	cease();
 }
